@@ -16,7 +16,6 @@ public class User {
     @NotBlank(message = "логин не может быть пустым")
     @CorrectLogin
     private String login;
-
     private String name;
 
     @PastOrPresent
