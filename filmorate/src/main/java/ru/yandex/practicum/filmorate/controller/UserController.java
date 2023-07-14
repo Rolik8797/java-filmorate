@@ -16,23 +16,26 @@ import java.util.List;
 @AllArgsConstructor
 public class UserController {
     private final UserService userService;
+
     @GetMapping
     public List<User> getFilms() {
         List<User> usersList = new ArrayList<>(userService.getAllUsers().values());
-        log.debug("Количество пользователей: {}",usersList.size());
+        log.debug("Количество пользователей: {}", usersList.size());
         return usersList;
     }
+
     @PostMapping
     public User createFilm(@Valid @RequestBody User user) {
-        if (userService.getAllUsers().containsKey(user.getId())){
+        if (userService.getAllUsers().containsKey(user.getId())) {
             throw new RuntimeException("Пользователь уже есть в базе");
         }
         userService.setUserNameByLogin(user, "Добавлен");
         return userService.createUser(user);
     }
+
     @PutMapping
-    public User updateFilm(@RequestBody User user){
-        if (!userService.getAllUsers().containsKey(user.getId())){
+    public User updateFilm(@RequestBody User user) {
+        if (!userService.getAllUsers().containsKey(user.getId())) {
             throw new RuntimeException("Пользователь уже есть в базе");
         }
         userService.setUserNameByLogin(user, "Добавлен");

@@ -20,14 +20,17 @@ public class FilmService {
     public Map<Integer, Film> getAllFilms() {
         return filmStorage.getFilms();
     }
-    public Film createFilm (Film film) {
+
+    public Film createFilm(Film film) {
         return filmStorage.create(film);
     }
+
     public Film updateFilm(Film film) {
         return filmStorage.update(film);
     }
-    public void validateReleaseDate(Film film, String text){
-        if (film.getReleaseDate().isBefore(START_DATA)){
+
+    public void validateReleaseDate(Film film, String text) {
+        if (film.getReleaseDate().isBefore(START_DATA)) {
             throw new ValidationException("Дата релиза не может быть раньше " + START_DATA);
         }
         log.debug("{} фильм: ", text, film.getName());

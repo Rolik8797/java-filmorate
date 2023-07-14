@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-public class Film  {
+public class Film {
     @PositiveOrZero(message = "id не может быть отрицательным")
     private int id;
     @NotBlank(message = "имя не должно быть пустым")

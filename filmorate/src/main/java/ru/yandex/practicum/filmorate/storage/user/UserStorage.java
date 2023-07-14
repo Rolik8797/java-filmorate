@@ -17,17 +17,19 @@ public class UserStorage {
     private final Map<Integer, User> users = new HashMap<>();
     private static int id;
 
-    public  int generateId() {
+    public int generateId() {
         return ++id;
     }
-    public User create(User user){
+
+    public User create(User user) {
         int newTaskId = generateId();
         user.setId(newTaskId);
         users.put(newTaskId, user);
         return user;
     }
-    public User update(User user){
-        users.put(user.getId(),user);
+
+    public User update(User user) {
+        users.put(user.getId(), user);
         return user;
     }
 }

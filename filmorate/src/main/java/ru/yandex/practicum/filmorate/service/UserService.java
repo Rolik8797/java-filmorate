@@ -14,17 +14,20 @@ import java.util.Map;
 public class UserService {
     private final UserStorage userStorage;
 
-    public Map<Integer, User> getAllUsers(){
+    public Map<Integer, User> getAllUsers() {
         return userStorage.getUsers();
     }
-    public User createUser(User user){
+
+    public User createUser(User user) {
         return userStorage.create(user);
     }
-    public User updateUser(User user){
+
+    public User updateUser(User user) {
         return userStorage.update(user);
     }
-    public void setUserNameByLogin(User user, String text){
-        if (user.getName()==null || user.getName().isBlank()){
+
+    public void setUserNameByLogin(User user, String text) {
+        if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
         log.debug("{} пользователь: {}, email: {}", text, user.getName(), user.getEmail());
