@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@Slf4j
 @RequestMapping("/users")
 @AllArgsConstructor
+@Slf4j
 public class UserController {
     private final UserService userService;
 
