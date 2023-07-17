@@ -13,7 +13,7 @@ import java.util.Map;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class FilmStorage{
+public class FilmStorage {
     private final Map<Integer, Film> films = new HashMap<>();
     private static int id;
 
