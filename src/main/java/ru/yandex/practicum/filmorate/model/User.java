@@ -7,7 +7,7 @@ import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Data
-public class User {
+public class User  {
     @PositiveOrZero(message = "id can not be negative")
     private int id;
 

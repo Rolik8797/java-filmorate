@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Documented
 @Constraint(validatedBy = FilmReleaseDateValidator.class)
 
-public @interface CorrectReleaseDay {
+public @interface CorrectReleaseDay  {
     String message() default "";
 
     Class<?>[] groups() default {};
