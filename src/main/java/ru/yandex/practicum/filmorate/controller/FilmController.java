@@ -20,9 +20,9 @@ public class FilmController {
 
     @GetMapping
     public List<Film> getFilms() {
-        List<Film> filmList = new ArrayList<>(filmService.getAllFilms().values());
-        log.debug("Количество фильмов: {}", filmList.size());
-        return filmList;
+        List<Film> filmsList = new ArrayList<>(filmService.getAllFilms().values());
+        log.debug("Количество фильмов: {}", filmsList.size());
+        return filmsList;
     }
 
     @PostMapping

@@ -15,14 +15,17 @@ public class UserService {
     private final UserStorage userStorage;
 
     public Map<Integer, User> getAllUsers() {
+
         return userStorage.getUsers();
     }
 
     public User createUser(User user) {
+
         return userStorage.create(user);
     }
 
     public User updateUser(User user) {
+
         return userStorage.update(user);
     }
 

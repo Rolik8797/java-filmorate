@@ -15,17 +15,20 @@ import java.util.Map;
 @AllArgsConstructor
 public class FilmService {
     private final FilmStorage filmStorage;
-    private static final LocalDate START_DATA = LocalDate.of(1985, 12, 28);
+    private static final LocalDate START_DATA = LocalDate.of(1895, 12, 28);
 
     public Map<Integer, Film> getAllFilms() {
+
         return filmStorage.getFilms();
     }
 
     public Film createFilm(Film film) {
+
         return filmStorage.create(film);
     }
 
     public Film updateFilm(Film film) {
+
         return filmStorage.update(film);
     }
 

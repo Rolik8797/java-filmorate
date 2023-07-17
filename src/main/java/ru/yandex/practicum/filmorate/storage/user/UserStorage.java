@@ -18,6 +18,7 @@ public class UserStorage {
     private static int id;
 
     public int generateId() {
+
         return ++id;
     }
 

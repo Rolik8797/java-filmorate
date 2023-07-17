@@ -18,6 +18,7 @@ public class FilmStorage {
     private static int id;
 
     public int generateId() {
+
         return ++id;
     }
 

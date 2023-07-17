@@ -12,15 +12,18 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 public class Film {
-    @PositiveOrZero(message = "id не может быть отрицательным")
+    @PositiveOrZero(message = "id can not be negative")
     private int id;
-    @NotBlank(message = "имя не должно быть пустым")
-    private String name;
-    @Length(min = 1, max = 200, message = "Длина описания должны быть от 1 до 200 символов")
-    private String description;
-    @CorrectReleaseDay(message = "дата релиза — не раньше 28 декабря 1895 года")
-    private LocalDate releaseDate;
-    @PositiveOrZero(message = "продолжительность фильма должна быть положительной")
-    private Integer duration;
 
+    @NotBlank(message = "name must not be empty")
+    private String name;
+
+    @Length(min = 1, max = 200, message = "description length must be between 1 and 200")
+    private String description;
+
+    @CorrectReleaseDay(message = "releaseDate must be after 28-DEC-1895")
+    private LocalDate releaseDate;
+
+    @PositiveOrZero(message = "duration can not be negative")
+    private Integer duration;
 }

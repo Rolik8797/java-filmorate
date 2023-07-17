@@ -36,9 +36,9 @@ public class UserController {
     @PutMapping
     public User updateFilm(@RequestBody User user) {
         if (!userService.getAllUsers().containsKey(user.getId())) {
-            throw new RuntimeException("Пользователь уже есть в базе");
+            throw new RuntimeException("Пользователя нет базе");
         }
-        userService.setUserNameByLogin(user, "Добавлен");
+        userService.setUserNameByLogin(user, "Обновлен");
         return userService.createUser(user);
     }
 }

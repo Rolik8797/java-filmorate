@@ -8,14 +8,17 @@ import java.time.LocalDate;
 
 @Data
 public class User {
-    @PositiveOrZero(message = "id не может быть отрицательным")
+    @PositiveOrZero(message = "id can not be negative")
     private int id;
-    @NotNull(message = "логин не может быть нулевым")
+
+    @NotNull(message = "login must not be null")
     @Email(message = "invalid email")
     private String email;
-    @NotBlank(message = "логин не может быть пустым")
+
+    @NotBlank(message = "login must not empty")
     @CorrectLogin
     private String login;
+
     private String name;
 
     @PastOrPresent
