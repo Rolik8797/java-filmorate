@@ -1,8 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -10,9 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-@Getter
-@EqualsAndHashCode
-@ToString
 public class UserStorage {
     private final Map<Integer, User> users = new HashMap<>();
     private static int id;
@@ -32,4 +27,33 @@ public class UserStorage {
         users.put(user.getId(), user);
         return user;
     }
+
+    public Map<Integer, User> getUsers() {
+        return users;
+    }
+
+    public static int getId() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserStorage that = (UserStorage) o;
+        return users.equals(that.users);
+    }
+
+    @Override
+    public int hashCode() {
+        return users.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "UserStorage{" +
+                "users=" + users +
+                '}';
+    }
 }
+

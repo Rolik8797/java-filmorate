@@ -26,19 +26,11 @@ public class FilmController {
 
     @PostMapping
     public Film createFilm(@Valid @RequestBody Film film) {
-        if (filmService.getAllFilms().containsKey(film.getId())) {
-            throw new RuntimeException("Фильм уже есть в базе");
-        }
-        filmService.validateReleaseDate(film, "Добавлен");
         return filmService.createFilm(film);
     }
 
     @PutMapping
     public Film updateFilm(@RequestBody Film film) {
-        if (!filmService.getAllFilms().containsKey(film.getId())) {
-            throw new RuntimeException("Фильма нет в базе");
-        }
-        filmService.validateReleaseDate(film, "Обновлен");
         return filmService.updateFilm(film);
     }
 }

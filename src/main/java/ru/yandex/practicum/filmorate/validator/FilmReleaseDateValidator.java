@@ -7,9 +7,11 @@ import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
 
 public class FilmReleaseDateValidator implements ConstraintValidator<CorrectReleaseDay, LocalDate> {
+    private static final LocalDate MIN_RELEASE_DATE = LocalDate.of(1895, 12, 28);
+
     @Override
     public boolean isValid(LocalDate localDate, ConstraintValidatorContext constraintValidatorContext) {
-        return localDate.isAfter(LocalDate.of(1895, 12, 28));
+        return localDate.isAfter(MIN_RELEASE_DATE);
     }
 
     @Override
@@ -17,3 +19,8 @@ public class FilmReleaseDateValidator implements ConstraintValidator<CorrectRele
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 }
+
+
+
+
+

@@ -12,13 +12,13 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 public class Film {
-    @PositiveOrZero(message = "id can not be negayive")
+    @PositiveOrZero(message = "id can not be negative")
     private int id;
 
     @NotBlank(message = "name must not be empty")
     private String name;
 
-    @Length(min = 1, max = 200, message = "description lenght must be between 1 and 200")
+    @Length(min = 1, max = 200, message = "description length must be between 1 and 200")
     private String description;
 
     @CorrectReleaseDay(message = "releaseDate must be after 28-DEC-1895")

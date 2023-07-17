@@ -3,6 +3,8 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.AlreadyExistsException;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
@@ -21,10 +23,18 @@ public class FilmService {
     }
 
     public Film createFilm(Film film) {
+        if (filmStorage.getFilms().containsKey(film.getId())) {
+            throw new AlreadyExistsException("Фильм уже есть в базе");
+        }
+        validateReleaseDate(film, "Добавлен");
         return filmStorage.create(film);
     }
 
     public Film updateFilm(Film film) {
+        if (!filmStorage.getFilms().containsKey(film.getId())) {
+            throw new NotFoundException("Фильма нет в базе");
+        }
+        validateReleaseDate(film, "Обновлен");
         return filmStorage.update(film);
     }
 
