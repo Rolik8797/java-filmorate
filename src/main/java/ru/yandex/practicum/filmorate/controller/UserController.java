@@ -18,7 +18,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public List<User> getFilms()  {
+    public List<User> getFilms() {
         List<User> usersList = new ArrayList<>(userService.getAllUsers().values());
         log.debug("Количество пользователей: {}", usersList.size());
         return usersList;
