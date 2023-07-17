@@ -5,7 +5,7 @@ import ru.yandex.practicum.filmorate.annotation.CorrectLogin;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class LoginValidator implements ConstraintValidator<CorrectLogin, String> {
+public class LoginValidator implements ConstraintValidator<CorrectLogin, String>{
     @Override
     public boolean isValid(String login, ConstraintValidatorContext constraintValidatorContext) {
         if (login == null) {

@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Slf4j
 
-public class FilmController {
+public class FilmController{
     private final FilmService filmService;
 
     @GetMapping
