@@ -8,7 +8,7 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.util.Map;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -16,12 +16,12 @@ import java.util.Map;
 public class UserService {
     private final UserStorage userStorage;
 
-    public Map<Integer, User> getAllUsers() {
+    public List<User> getAllUsers() {
         return userStorage.getUsers();
     }
 
     public User createUser(User user) {
-        if (userStorage.getUsers().containsKey(user.getId())) {
+        if (userStorage.getUsers().stream().anyMatch(u -> u.getId() == user.getId())) {
             throw new AlreadyExistsException("Пользователь уже есть в базе");
         }
         setUserNameByLogin(user, "Добавлен");
@@ -29,7 +29,7 @@ public class UserService {
     }
 
     public User updateUser(User user) {
-        if (!userStorage.getUsers().containsKey(user.getId())) {
+        if (userStorage.getUsers().stream().noneMatch(u -> u.getId() == user.getId())) {
             throw new NotFoundException("Пользователя нет в базе");
         }
         setUserNameByLogin(user, "Обновлен");

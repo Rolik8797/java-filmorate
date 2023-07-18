@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,19 +17,21 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public List<User> getFilms() {
-        List<User> usersList = new ArrayList<>(userService.getAllUsers().values());
+    public List<User> getUsers() {
+        List<User> usersList = userService.getAllUsers();
         log.debug("Количество пользователей: {}", usersList.size());
         return usersList;
     }
 
     @PostMapping
-    public User createFilm(@Valid @RequestBody User user) {
+    public User createUser(@Valid @RequestBody User user) {
+        log.debug("Создание пользователя: {}", user);
         return userService.createUser(user);
     }
 
     @PutMapping
-    public User updateFilm(@RequestBody User user) {
+    public User updateUser(@RequestBody User user) {
+        log.debug("Обновление пользователя: {}", user);
         return userService.updateUser(user);
     }
 }

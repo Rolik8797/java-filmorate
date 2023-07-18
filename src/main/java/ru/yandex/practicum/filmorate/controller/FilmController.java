@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,18 +18,20 @@ public class FilmController {
 
     @GetMapping
     public List<Film> getFilms() {
-        List<Film> filmsList = new ArrayList<>(filmService.getAllFilms().values());
+        List<Film> filmsList = filmService.getAllFilms();
         log.debug("Количество фильмов: {}", filmsList.size());
         return filmsList;
     }
 
     @PostMapping
     public Film createFilm(@Valid @RequestBody Film film) {
+        log.debug("Создание фильма: {}", film);
         return filmService.createFilm(film);
     }
 
     @PutMapping
     public Film updateFilm(@RequestBody Film film) {
+        log.debug("Обновление фильма: {}", film);
         return filmService.updateFilm(film);
     }
 }

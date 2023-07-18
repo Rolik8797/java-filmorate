@@ -3,13 +3,13 @@ package ru.yandex.practicum.filmorate.storage.film;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Component
 public class FilmStorage {
-    private final Map<Integer, Film> films = new HashMap<>();
+    private final List<Film> films = new ArrayList<>();
     private static int id;
 
     public int generateId() {
@@ -17,15 +17,22 @@ public class FilmStorage {
     }
 
     public Film create(Film film) {
-        int newTaskId = generateId();
-        film.setId(newTaskId);
-        films.put(newTaskId, film);
+        int newFilmId = generateId();
+        film.setId(newFilmId);
+        films.add(film);
         return film;
     }
 
     public Film update(Film film) {
-        films.put(film.getId(), film);
-        return film;
+        int filmIdToUpdate = film.getId();
+        for (int i = 0; i < films.size(); i++) {
+            Film storedFilm = films.get(i);
+            if (storedFilm.getId() == filmIdToUpdate) {
+                films.set(i, film);
+                return film;
+            }
+        }
+        throw new IllegalArgumentException("Film with ID " + filmIdToUpdate + " not found.");
     }
 
     @Override
@@ -48,12 +55,11 @@ public class FilmStorage {
                 '}';
     }
 
-    public Map<Integer, Film> getFilms() {
+    public List<Film> getFilms() {
         return films;
     }
 
-    public static int getId() {
+    private int getId() {
         return id;
     }
 }
-
