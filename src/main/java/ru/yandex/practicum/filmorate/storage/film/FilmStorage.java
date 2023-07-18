@@ -5,7 +5,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
 
 @Component
 public class FilmStorage {
@@ -33,26 +33,6 @@ public class FilmStorage {
             }
         }
         throw new IllegalArgumentException("Film with ID " + filmIdToUpdate + " not found.");
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FilmStorage that = (FilmStorage) o;
-        return Objects.equals(films, that.films);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(films);
-    }
-
-    @Override
-    public String toString() {
-        return "FilmStorage{" +
-                "films=" + films +
-                '}';
     }
 
     public List<Film> getFilms() {

@@ -38,7 +38,7 @@ public class UserStorage {
         return users;
     }
 
-    public static int getId() {
+    private int getId() {
         return id;
     }
 }

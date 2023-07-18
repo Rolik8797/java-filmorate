@@ -42,7 +42,7 @@ public class FilmService {
         return filmStorage.update(film);
     }
 
-    public void validateReleaseDate(Film film, String text) {
+    private void validateReleaseDate(Film film, String text) {
         if (film.getReleaseDate().isBefore(MIN_RELEASE_DATE)) {
             throw new InvalidReleaseDateException("Дата релиза не может быть раньше " + MIN_RELEASE_DATE);
         }
