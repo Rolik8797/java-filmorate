@@ -18,9 +18,12 @@ public class FilmController {
 
     @GetMapping
     public List<Film> getFilms() {
-        List<Film> filmsList = filmService.getAllFilms();
-        log.debug("Количество фильмов: {}", filmsList.size());
-        return filmsList;
+        return filmService.getAllFilms();
+    }
+
+    @GetMapping("/{id}")
+    public Film getFilmById(@PathVariable Integer id) {
+        return filmService.getFilmById(id);
     }
 
     @PostMapping
@@ -33,5 +36,21 @@ public class FilmController {
     public Film updateFilm(@RequestBody Film film) {
         log.debug("Обновление фильма: {}", film);
         return filmService.updateFilm(film);
+    }
+
+    @PutMapping("/{filmId}/like/{userId}")
+    public void addLike(@PathVariable Integer filmId, @PathVariable Integer userId) {
+        filmService.addLike(filmId, userId);
+    }
+
+    @DeleteMapping("/{filmId}/like/{userId}")
+    public void deleteLike(@PathVariable Integer filmId, @PathVariable Integer userId) {
+        filmService.deleteLike(filmId, userId);
+    }
+
+    @GetMapping("/popular")
+    public List<Film> getFilmsPopular(
+            @RequestParam(value = "count", defaultValue = "10", required = false) Integer count) {
+        return filmService.getFilmsPopular(count);
     }
 }
