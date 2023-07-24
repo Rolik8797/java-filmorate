@@ -15,4 +15,6 @@ public interface UserStorage {
     User getUserById(Integer id);
 
     List<User> getUserFriends(Integer userId);
+
+    boolean exists(Integer userId);
 }

@@ -1,7 +1,10 @@
 package ru.yandex.practicum.filmorate.exception;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public class CustomValidationException extends RuntimeException {
-    public CustomValidationException(String message) {
-        super(message);
-    }
+    private final String message;
 }

@@ -1,18 +1,10 @@
 package ru.yandex.practicum.filmorate.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
+@Getter
+@AllArgsConstructor
 public class NotFoundException extends RuntimeException {
-    private final String parameter;
-
-    public NotFoundException(String parameter, String message) {
-        super(message);
-        this.parameter = parameter;
-    }
-
-    public String getParameter() {
-        return parameter;
-    }
+    private final String message;
 }

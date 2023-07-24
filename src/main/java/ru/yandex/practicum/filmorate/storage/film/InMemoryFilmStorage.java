@@ -1,8 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.FilmFoundException;
-import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exception.AlreadyExistsException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -24,7 +23,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film create(Film film) {
         if (films.containsKey(film.getId())) {
-            throw new FilmFoundException(String.format("Фильм с id=%d есть в базе", film.getId()));
+            throw new AlreadyExistsException(String.format("Фильм с id=%d есть в базе", film.getId()));
         }
         int newFilmId = generateId();
         film.setId(newFilmId);
@@ -35,7 +34,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film update(Film film) {
         if (!films.containsKey(film.getId())) {
-            throw new FilmNotFoundException(String.format("Фильма с id=%d нет в базе", film.getId()));
+            throw new NotFoundException(String.format("Фильма с id=%d нет в базе", film.getId()));
         }
         films.put(film.getId(), film);
         return film;
@@ -50,7 +49,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film getFilmById(Integer id) {
         if (!films.containsKey(id)) {
-            throw new FilmNotFoundException(String.format("Фильм с id=%d не найден", id));
+            throw new NotFoundException(String.format("Фильм с id=%d не найден", id));
         }
         return films.get(id);
     }
@@ -74,8 +73,19 @@ public class InMemoryFilmStorage implements FilmStorage {
     public void deleteLike(Integer filmId, Integer userId) {
         Film film = films.get(filmId);
         if (!film.getLikes().contains(userId)) {
-            throw new NotFoundException("id", String.format("user with id=%d not found", userId));
+            throw new NotFoundException(String.format("User with id=%d not found", userId));
         }
         film.deleteLike(userId);
+    }
+
+    @Override
+    public boolean exists(Integer filmId) {
+        return films.containsKey(filmId);
+    }
+
+    // Add the missing method
+    @Override
+    public boolean filmExistsById(Integer filmId) {
+        return exists(filmId);
     }
 }
