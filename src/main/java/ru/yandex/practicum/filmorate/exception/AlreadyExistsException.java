@@ -1,10 +1,12 @@
 package ru.yandex.practicum.filmorate.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
-@AllArgsConstructor
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(value = HttpStatus.FOUND)
 public class AlreadyExistsException extends RuntimeException {
-    private final String message;
+    public AlreadyExistsException(String message) {
+        super(message);
+    }
 }

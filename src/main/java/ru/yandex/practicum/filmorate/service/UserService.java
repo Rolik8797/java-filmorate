@@ -36,7 +36,7 @@ public class UserService {
     }
 
     public User updateUser(User user) {
-        if (userStorage.getAllUsers().stream().noneMatch(u -> u.getId() == user.getId())) {
+        if (!userStorage.exists(user.getId())) {
             throw new FilmUserNotFoundException("Пользователя нет в базе");
         }
         setUserNameByLogin(user, "Обновлен");
