@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import ru.yandex.practicum.filmorate.exception.AlreadyExistsException;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.FilmUserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -37,7 +37,7 @@ public class UserService {
 
     public User updateUser(User user) {
         if (userStorage.getAllUsers().stream().noneMatch(u -> u.getId() == user.getId())) {
-            throw new NotFoundException("Пользователя нет в базе");
+            throw new FilmUserNotFoundException("Пользователя нет в базе");
         }
         setUserNameByLogin(user, "Обновлен");
         return userStorage.update(user);

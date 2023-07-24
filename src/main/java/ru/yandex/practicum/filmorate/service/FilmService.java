@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.AlreadyExistsException;
-import ru.yandex.practicum.filmorate.exception.IncorrectParameterException;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.FilmUserNotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
@@ -43,7 +43,7 @@ public class FilmService {
 
     public Film updateFilm(Film film) {
         if (!filmStorage.filmExistsById(film.getId())) {
-            throw new NotFoundException("Фильма нет в базе");
+            throw new FilmUserNotFoundException("Фильма нет в базе");
         }
         validateReleaseDate(film, "Обновлен");
         return filmStorage.update(film);
@@ -63,7 +63,7 @@ public class FilmService {
 
     private void validateReleaseDate(Film film, String text) {
         if (film.getReleaseDate().isBefore(MIN_RELEASE_DATE)) {
-            throw new IncorrectParameterException("Дата релиза не может быть раньше " + MIN_RELEASE_DATE);
+            throw new ValidationException("Дата релиза не может быть раньше " + MIN_RELEASE_DATE);
         }
         log.debug("{} фильм: {}", text, film.getName());
     }

@@ -5,7 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class NotFoundException extends RuntimeException {
-    private final String parameter;
+public class FilmUserNotFoundException extends RuntimeException {
     private final String message;
 }

@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.AlreadyExistsException;
+import ru.yandex.practicum.filmorate.exception.FilmUserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -34,7 +35,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film update(Film film) {
         if (!films.containsKey(film.getId())) {
-            throw new NotFoundException(String.format("Фильма с id=%d нет в базе", film.getId()));
+            throw new FilmUserNotFoundException(String.format("Фильма с id=%d нет в базе", film.getId()));
         }
         films.put(film.getId(), film);
         return film;
@@ -49,7 +50,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film getFilmById(Integer id) {
         if (!films.containsKey(id)) {
-            throw new NotFoundException(String.format("Фильм с id=%d не найден", id));
+            throw new FilmUserNotFoundException(String.format("Фильм с id=%d не найден", id));
         }
         return films.get(id);
     }
@@ -73,7 +74,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     public void deleteLike(Integer filmId, Integer userId) {
         Film film = films.get(filmId);
         if (!film.getLikes().contains(userId)) {
-            throw new NotFoundException(String.format("User with id=%d not found", userId));
+            throw new NotFoundException("id", String.format("User with id=%d not found", userId));
         }
         film.deleteLike(userId);
     }
