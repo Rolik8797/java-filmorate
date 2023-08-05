@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/users")
@@ -18,9 +19,12 @@ public class UserController {
 
     @GetMapping
     public List<User> getUsers() {
-        List<User> usersList = userService.getAllUsers();
-        log.debug("Количество пользователей: {}", usersList.size());
-        return usersList;
+        return userService.getAllUsers();
+    }
+
+    @GetMapping("/{id}")
+    public User getUserById(@Valid @PathVariable("id") Integer userId) {
+        return userService.getUserById(userId);
     }
 
     @PostMapping
@@ -33,5 +37,26 @@ public class UserController {
     public User updateUser(@RequestBody User user) {
         log.debug("Обновление пользователя: {}", user);
         return userService.updateUser(user);
+    }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+        userService.addFriend(id, friendId);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public void deleteFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+        userService.deleteFriend(id, friendId);
+    }
+
+    @GetMapping("/{id}/friends")
+    public List<User> getFriendsSet(@PathVariable Integer id) {
+        return userService.getUserFriends(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public Set<User> getMutualFriends(@PathVariable("id") Integer id,
+                                      @PathVariable("otherId") Integer otherId) {
+        return userService.getMutualFriends(id, otherId);
     }
 }
