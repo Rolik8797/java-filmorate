@@ -1,0 +1,12 @@
+CONSTRAINT pk_GenreLine PRIMARY KEY(
+                                                               GenreLineID
+                              )
+
+
+                              ALTER TABLE GenreLine ADD CONSTRAINT IF NOT EXISTS fk_GenreLine_FilmID FOREIGN KEY(FilmID)
+                                  REFERENCES Film (FilmID) ON DELETE CASCADE;
+
+                              ALTER TABLE GenreLine ADD CONSTRAINT IF NOT EXISTS fk_GenreLine_GenreID FOREIGN KEY(GenreID)
+                                  REFERENCES Genre (GenreID) ON DELETE RESTRICT;
+
+                                  ALTER TABLE GenreLine ADD CONSTRAINT IF NOT EXISTS UC_GenreLine_GenreID_FilmID UNIQUE (GenreID, FilmID)
