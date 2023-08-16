@@ -1,70 +1,110 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.AlreadyExistsException;
-import ru.yandex.practicum.filmorate.exception.FilmUserNotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.time.LocalDate;
-import java.util.List;
+import ru.yandex.practicum.filmorate.exception.*;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import java.util.Collection;
+import java.util.Set;
 
 @Service
-@Slf4j
-@AllArgsConstructor
 public class FilmService {
+    private static int increment = 0;
+    private final Validator validator;
     private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
-    private static final LocalDate MIN_RELEASE_DATE = LocalDate.of(1895, 12, 28);
+    private final UserService userService;
 
-    public List<Film> getAllFilms() {
+    @Autowired
+    public FilmService(Validator validator, @Qualifier("DBFilmStorage") FilmStorage filmStorage,
+                       @Autowired(required = false) UserService userService) {
+        this.validator = validator;
+        this.filmStorage = filmStorage;
+        this.userService = userService;
+    }
+
+    public Collection<Film> getFilms() {
         return filmStorage.getAllFilms();
     }
 
-    public Film getFilmById(Integer id) {
-        return filmStorage.getFilmById(id);
+    public Film add(Film film) {
+        validate(film);
+        return filmStorage.addFilm(film);
     }
 
-    public List<Film> getFilmsPopular(Integer count) {
-        return filmStorage.getFilmsPopular(count);
+    public Film update(Film film) {
+        validate(film);
+        return filmStorage.updateFilm(film);
     }
 
-    public Film createFilm(Film film) {
-        if (filmStorage.filmExistsById(film.getId())) {
-            throw new AlreadyExistsException("Фильм уже есть в базе");
+    public void addLike(final String id, final String userId) {
+        Film film = getStoredFilm(id);
+        User user = userService.getUser(userId);
+        filmStorage.addLike(film.getId(), user.getId());
+    }
+
+    public void deleteLike(final String id, final String userId) {
+        Film film = getStoredFilm(id);
+        User user = userService.getUser(userId);
+        filmStorage.deleteLike(film.getId(), user.getId());
+    }
+
+    public Collection<Film> getMostPopularFilms(final String count) {
+        Integer size = intFromString(count);
+        if (size == Integer.MIN_VALUE) {
+            size = 10;
         }
-        validateReleaseDate(film, "Добавлен");
-        return filmStorage.create(film);
+        return filmStorage.getMostPopularFilms(size);
     }
 
-    public Film updateFilm(Film film) {
-        if (!filmStorage.filmExistsById(film.getId())) {
-            throw new FilmUserNotFoundException("Фильма нет в базе");
+    public Film getFilm(String id) {
+
+        return getStoredFilm(id);
+    }
+
+    private void validate(Film film) {
+        Set<ConstraintViolation<Film>> violations = validator.validate(film);
+        if (!violations.isEmpty()) {
+            StringBuilder messageBuilder = new StringBuilder();
+            for (ConstraintViolation<Film> filmConstraintViolation : violations) {
+                messageBuilder.append(filmConstraintViolation.getMessage());
+            }
+            throw new FilmValidationException("Ошибка валидации фильма: " + messageBuilder, violations);
         }
-        validateReleaseDate(film, "Обновлен");
-        return filmStorage.update(film);
-    }
-
-    public void addLike(Integer filmId, Integer userId) {
-        userStorage.getUserById(userId);
-        filmStorage.addLike(filmId, userId);
-        log.info("like for with id={} added", filmId);
-    }
-
-    public void deleteLike(Integer filmId, Integer userId) {
-        userStorage.getUserById(userId);
-        filmStorage.deleteLike(filmId, userId);
-        log.info("like for with id={} deleted", filmId);
-    }
-
-    private void validateReleaseDate(Film film, String text) {
-        if (film.getReleaseDate().isBefore(MIN_RELEASE_DATE)) {
-            throw new ValidationException("Дата релиза не может быть раньше " + MIN_RELEASE_DATE);
+        if (film.getId() == 0) {
+            film.setId(getNextId());
         }
-        log.debug("{} фильм: {}", text, film.getName());
+    }
+
+    private static int getNextId() {
+        return ++increment;
+    }
+
+    private Integer intFromString(final String supposedInt) {
+        try {
+            return Integer.valueOf(supposedInt);
+        } catch (NumberFormatException exception) {
+            return Integer.MIN_VALUE;
+        }
+    }
+
+    private Film getStoredFilm(final String supposedId) {
+        final int filmId = intFromString(supposedId);
+        if (filmId == Integer.MIN_VALUE) {
+            throw new WrongIdException("Не удалось распознать идентификатор фильма: " +
+                    "значение " + supposedId);
+        }
+        Film film = filmStorage.getFilm(filmId);
+        if (film == null) {
+            throw new NotFoundException("Фильм с идентификатором " +
+                    filmId + " не зарегистрирован!");
+        }
+        return film;
     }
 }
