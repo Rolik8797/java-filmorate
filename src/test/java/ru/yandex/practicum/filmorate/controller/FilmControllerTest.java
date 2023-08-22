@@ -9,7 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.yandex.practicum.filmorate.dto.FilmDto;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.time.LocalDate;
 
@@ -45,16 +47,24 @@ class FilmControllerTest {
 
     @Test
     void shouldReturn200whenPostCorrectFilmData() throws Exception {
+        FilmDto filmDto = new FilmDto();
+        filmDto.setName("Correct Name");
+        filmDto.setDescription("Correct description");
+        filmDto.setReleaseDate(LocalDate.of(1995, 5, 26));
+        filmDto.setDuration(100L);
+        filmDto.setMpa(new Mpa(1, "mpa", "description"));
         Film film = new Film();
         film.setName("Correct Name");
         film.setDescription("Correct description");
         film.setReleaseDate(LocalDate.of(1995, 5, 26));
         film.setDuration(100L);
-        Mockito.when(filmController.create(Mockito.any())).thenReturn(film);
+
+        Mockito.when(filmController.create(Mockito.any())).thenReturn(filmDto);
+
         mockMvc.perform(post("/films")
-                        .content(objectMapper.writeValueAsString(film))
+                        .content(objectMapper.writeValueAsString(filmDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(film)));
+                .andExpect(content().json(objectMapper.writeValueAsString(filmDto)));
     }
 }

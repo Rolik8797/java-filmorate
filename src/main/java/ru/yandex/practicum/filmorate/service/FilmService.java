@@ -4,27 +4,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import ru.yandex.practicum.filmorate.dto.FilmDto;
 import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
+
+import javax.validation.Valid;
+
 import java.util.Collection;
-import java.util.Set;
+
 
 @Service
 public class FilmService {
     private static int increment = 0;
-    private final Validator validator;
     private final FilmStorage filmStorage;
     private final UserService userService;
 
     @Autowired
-    public FilmService(Validator validator, @Qualifier("DBFilmStorage") FilmStorage filmStorage,
-                       @Autowired(required = true) UserService userService) {
-        this.validator = validator;
+    public FilmService(@Qualifier("DBFilmStorage") FilmStorage filmStorage,
+                       UserService userService) {
         this.filmStorage = filmStorage;
         this.userService = userService;
     }
@@ -33,13 +33,13 @@ public class FilmService {
         return filmStorage.getAllFilms();
     }
 
-    public Film add(Film film) {
-        validate(film);
+    public Film add(@Valid FilmDto filmDto) {
+        Film film = convertToFilm(filmDto);
         return filmStorage.addFilm(film);
     }
 
-    public Film update(Film film) {
-        validate(film);
+    public Film update(@Valid FilmDto filmDto) {
+        Film film = convertToFilm(filmDto);
         return filmStorage.updateFilm(film);
     }
 
@@ -64,22 +64,31 @@ public class FilmService {
         return getStoredFilm(id);
     }
 
-    private void validate(Film film) {
-        Set<ConstraintViolation<Film>> violations = validator.validate(film);
-        if (!violations.isEmpty()) {
-            StringBuilder messageBuilder = new StringBuilder();
-            for (ConstraintViolation<Film> filmConstraintViolation : violations) {
-                messageBuilder.append(filmConstraintViolation.getMessage());
-            }
-            throw new FilmValidationException("Ошибка валидации фильма: " + messageBuilder, violations);
-        }
-        if (film.getId() == 0) {
-            film.setId(getNextId());
-        }
+    private Film convertToFilm(FilmDto filmDto) {
+        Film film = new Film();
+        film.setId(filmDto.getId());
+        film.setName(filmDto.getName());
+        film.setDescription(filmDto.getDescription());
+        film.setReleaseDate(filmDto.getReleaseDate());
+        film.setDuration(filmDto.getDuration());
+        film.setRate(filmDto.getRate());
+        film.setMpa(filmDto.getMpa());
+        film.setGenres(filmDto.getGenres());
+        return film;
     }
 
-    private static int getNextId() {
-        return ++increment;
+    private Film getStoredFilm(final String supposedId) {
+        int filmId = intFromString(supposedId);
+        if (filmId == Integer.MIN_VALUE) {
+            throw new WrongIdException("Не удалось распознать идентификатор фильма: " + "значение " + supposedId);
+        }
+
+        Film film = filmStorage.getFilm(filmId);
+        if (film == null) {
+            throw new NotFoundException("Фильм с идентификатором " + filmId + " не зарегистрирован!");
+        }
+
+        return film;
     }
 
     private Integer intFromString(final String supposedInt) {
@@ -88,19 +97,5 @@ public class FilmService {
         } catch (NumberFormatException exception) {
             return Integer.MIN_VALUE;
         }
-    }
-
-    private Film getStoredFilm(final String supposedId) {
-        final int filmId = intFromString(supposedId);
-        if (filmId == Integer.MIN_VALUE) {
-            throw new WrongIdException("Не удалось распознать идентификатор фильма: " +
-                    "значение " + supposedId);
-        }
-        Film film = filmStorage.getFilm(filmId);
-        if (film == null) {
-            throw new NotFoundException("Фильм с идентификатором " +
-                    filmId + " не зарегистрирован!");
-        }
-        return film;
     }
 }

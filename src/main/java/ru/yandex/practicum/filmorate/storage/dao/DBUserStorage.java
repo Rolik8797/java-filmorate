@@ -101,18 +101,15 @@ public class DBUserStorage implements UserStorage {
             String sqlGetReversedFriend = "SELECT status FROM friendship WHERE userid = ? AND friendid = ?";
             Integer reversedFriendStatus = jdbcTemplate.queryForObject(sqlGetReversedFriend, Integer.class, friendId, userId);
 
-            String sqlAddFriendship = "INSERT INTO friendship (userid, friendid, status) VALUES (?, ?, ?)";
+            String sqlAddFriendship = "INSERT INTO friendship (userid, friendid, status) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE STATUS = ?";
             if (reversedFriendStatus != null && reversedFriendStatus == 1) {
-
-                jdbcTemplate.update(sqlAddFriendship, userId, friendId, true);
-                jdbcTemplate.update(sqlAddFriendship, friendId, userId, true);
+                jdbcTemplate.update(sqlAddFriendship, userId, friendId, true, true);
+                jdbcTemplate.update(sqlAddFriendship, friendId, userId, true, true);
             } else {
-
-                jdbcTemplate.update(sqlAddFriendship, userId, friendId, false);
+                jdbcTemplate.update(sqlAddFriendship, userId, friendId, false, false);
             }
             return true;
         } catch (EmptyResultDataAccessException e) {
-
             String sqlAddFriendship = "INSERT INTO friendship (userid, friendid, status) VALUES (?, ?, ?)";
             jdbcTemplate.update(sqlAddFriendship, userId, friendId, false);
             return true;

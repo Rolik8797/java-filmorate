@@ -74,11 +74,11 @@ public class DBFilmStorage implements FilmStorage {
         int id = Objects.requireNonNull(keyHolder.getKey()).intValue();
 
         if (!film.getGenres().isEmpty()) {
-            genreService.addFilmGenres(film.getId(), film.getGenres());
+            genreService.addFilmGenres(id, film.getGenres());
         }
         if (film.getLikes() != null) {
             for (Integer userId : film.getLikes()) {
-                addLike(film.getId(), userId);
+                addLike(id, userId);
             }
         }
         return getFilm(id);
