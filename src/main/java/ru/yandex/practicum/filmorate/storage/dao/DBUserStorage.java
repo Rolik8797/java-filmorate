@@ -98,11 +98,13 @@ public class DBUserStorage implements UserStorage {
     @Override
     public boolean addFriend(int userId, int friendId) {
         try {
-            String sqlGetReversedFriend = "SELECT status FROM friendship WHERE userid = ? AND friendid = ?";
-            Integer reversedFriendStatus = jdbcTemplate.queryForObject(sqlGetReversedFriend, Integer.class, friendId, userId);
+            String sqlGetFriendship = "SELECT status FROM friendship WHERE (userid = ? AND friendid = ?) OR (userid = ? AND friendid = ?)";
+            Integer friendshipStatus = jdbcTemplate.queryForObject(sqlGetFriendship, Integer.class, userId, friendId, friendId, userId);
 
-            String sqlAddFriendship = "INSERT INTO friendship (userid, friendid, status) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE STATUS = ?";
-            if (reversedFriendStatus != null && reversedFriendStatus == 1) {
+            String sqlAddFriendship = "INSERT INTO friendship (userid, friendid, status) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE status = ?";
+            if (friendshipStatus == null) {
+                jdbcTemplate.update(sqlAddFriendship, userId, friendId, false, false);
+            } else if (friendshipStatus == 1) {
                 jdbcTemplate.update(sqlAddFriendship, userId, friendId, true, true);
                 jdbcTemplate.update(sqlAddFriendship, friendId, userId, true, true);
             } else {

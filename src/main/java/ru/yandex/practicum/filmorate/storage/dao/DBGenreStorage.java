@@ -9,7 +9,9 @@ import ru.yandex.practicum.filmorate.storage.GenreStorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Component
 public class DBGenreStorage implements GenreStorage {
@@ -29,19 +31,31 @@ public class DBGenreStorage implements GenreStorage {
     @Override
     public boolean addFilmGenres(int filmId, Collection<Genre> genres) {
         String insertGenreLine = "insert into genreline (filmid, genreid) values (?, ?)";
+        List<Object[]> batchArgs = new ArrayList<>();
 
         for (Genre genre : genres) {
-
             String checkExisting = "select count(*) from genreline where filmid = ? and genreid = ?";
             int existingCount = jdbcTemplate.queryForObject(checkExisting, Integer.class, filmId, genre.getId());
 
             if (existingCount == 0) {
-                jdbcTemplate.update(insertGenreLine, filmId, genre.getId());
-                System.out.println("Added film ID: " + filmId + " with genre ID: " + genre.getId());
+                batchArgs.add(new Object[]{filmId, genre.getId()});
             } else {
                 System.out.println("Film ID: " + filmId + " with genre ID: " + genre.getId() + " already exists.");
             }
         }
+
+        if (!batchArgs.isEmpty()) {
+            String insertUniqueGenreLine = "insert into genreline (filmid, genreid) select ?, ? " +
+                    "where not exists (select 1 from genreline where filmid = ? and genreid = ?)";
+            List<Object[]> uniqueBatchArgs = new ArrayList<>();
+            for (Object[] args : batchArgs) {
+                uniqueBatchArgs.add(new Object[]{args[0], args[1], args[0], args[1]});
+            }
+
+            int[] updateCounts = jdbcTemplate.batchUpdate(insertUniqueGenreLine, uniqueBatchArgs);
+            System.out.println("Added " + updateCounts.length + " genre lines.");
+        }
+
         return true;
     }
 

@@ -11,8 +11,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 
-import javax.validation.Valid;
-
 import java.util.Collection;
 
 
@@ -33,12 +31,12 @@ public class FilmService {
         return filmStorage.getAllFilms();
     }
 
-    public Film add(@Valid FilmDto filmDto) {
+    public Film add(FilmDto filmDto) {
         Film film = convertToFilm(filmDto);
         return filmStorage.addFilm(film);
     }
 
-    public Film update(@Valid FilmDto filmDto) {
+    public Film update(FilmDto filmDto) {
         Film film = convertToFilm(filmDto);
         return filmStorage.updateFilm(film);
     }

@@ -60,15 +60,6 @@ public class UserService {
         userStorage.deleteFriend(user.getId(), friend.getId());
     }
 
-    public Collection<User> getFriends(final String supposedUserId) {
-        User user = getStoredUser(supposedUserId);
-        Collection<User> friends = new HashSet<>();
-        for (Integer id : user.getFriends()) {
-            friends.add(userStorage.getUser(id));
-        }
-        return friends;
-    }
-
     public Collection<User> getCommonFriends(final String supposedUserId, final String supposedOtherId) {
         User user = getStoredUser(supposedUserId);
         User otherUser = getStoredUser(supposedOtherId);

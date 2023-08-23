@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 @RestController
 @Slf4j
@@ -27,7 +28,12 @@ public class UserController {
     @GetMapping("/{id}/friends")
     public Collection<User> findFriends(@PathVariable String id) {
         log.info("Получен запрос GET к эндопоинту: /users/{}/friends", id);
-        return userService.getFriends(id);
+        User user = userService.getUser(id);
+        Collection<User> friends = new HashSet<>();
+        for (Integer friendId : user.getFriends()) {
+            friends.add(userService.getUser(friendId.toString()));
+        }
+        return friends;
     }
 
     @GetMapping("/{id}")
@@ -73,4 +79,5 @@ public class UserController {
         log.info("Обновлен объект {} с идентификатором {}. Удален друг {}",
                 User.class.getSimpleName(), id, friendId);
     }
+
 }
