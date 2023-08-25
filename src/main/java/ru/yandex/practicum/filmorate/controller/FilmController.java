@@ -30,7 +30,7 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public Film findFilm(@PathVariable String id) {
+    public Film findFilm(@PathVariable Integer id) {
         log.info("Получен запрос GET к эндопоинту: /films/{}", id);
         return filmService.getFilm(id);
     }
@@ -58,7 +58,7 @@ public class FilmController {
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public void putLike(@PathVariable String id, @PathVariable String userId) {
+    public void putLike(@PathVariable Integer id, @PathVariable Integer userId) {
         log.info("Получен запрос PUT к эндопоинту: /films/{}/like/{}", id, userId);
         filmService.addLike(id, userId);
         log.info("Обновлен объект {} с идентификатором {}, добавлен лайк от пользователя {}",
@@ -66,7 +66,7 @@ public class FilmController {
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public void deleteLike(@PathVariable String id, @PathVariable String userId) {
+    public void deleteLike(@PathVariable Integer id, @PathVariable Integer userId) {
         log.info("Получен запрос DELETE к эндопоинту: films/{}/like/{}", id, userId);
         filmService.deleteLike(id, userId);
         log.info("Обновлен объект {} с идентификатором {}, удален лайк от пользователя {}",
@@ -83,7 +83,7 @@ public class FilmController {
         filmDto.setRate(film.getRate());
         filmDto.setMpa(film.getMpa());
         filmDto.setGenres(film.getGenres());
-        filmDto.setLikes(film.getLikes()); // Подставьте соответствующее поле
+        filmDto.setLikes(film.getLikes());
         return filmDto;
     }
 }

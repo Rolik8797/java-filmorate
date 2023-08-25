@@ -29,7 +29,7 @@ public class MpaController {
     }
 
     @GetMapping("/{id}")
-    public Mpa findGenre(@PathVariable String id) {
+    public Mpa findGenre(@PathVariable Integer id) {
         log.info("Получен запрос GET к эндопоинту: /mpa/{}", id);
         return mpaService.getMpa(id);
     }

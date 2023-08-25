@@ -52,4 +52,12 @@ public class Film {
     public int hashCode() {
         return Objects.hash(getId());
     }
+
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
+    }
+
+    public void setMpa(Mpa mpa) {
+        this.mpa = mpa;
+    }
 }

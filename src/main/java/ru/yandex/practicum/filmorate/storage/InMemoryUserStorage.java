@@ -62,4 +62,9 @@ public class InMemoryUserStorage implements UserStorage {
     public boolean deleteFriend(int userId, int friendId) {
         return false;
     }
+
+    @Override
+    public Collection<User> getUsersByIds(Collection<Integer> userIds) {
+        return Collections.emptyList();
+    }
 }

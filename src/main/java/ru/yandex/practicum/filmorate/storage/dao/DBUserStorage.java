@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -126,5 +127,16 @@ public class DBUserStorage implements UserStorage {
                 "where userid = ? and friendid = ?";
         jdbcTemplate.update(sqlSetStatus, friendId, userId);
         return true;
+    }
+
+    @Override
+    public Collection<User> getUsersByIds(Collection<Integer> userIds) {
+        String sqlGetUsersByIds = "SELECT * FROM users WHERE userid IN (?)";
+        List<Object[]> paramsList = new ArrayList<>();
+        userIds.forEach(userId -> paramsList.add(new Object[]{userId}));
+
+        List<User> users = jdbcTemplate.query(sqlGetUsersByIds, (rs, rowNum) -> makeUser(rs), paramsList.toArray());
+
+        return users;
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
+import javax.validation.Valid;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -26,30 +27,30 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friends")
-    public Collection<User> findFriends(@PathVariable String id) {
+    public Collection<User> findFriends(@PathVariable Integer id) {
         log.info("Получен запрос GET к эндопоинту: /users/{}/friends", id);
         User user = userService.getUser(id);
         Collection<User> friends = new HashSet<>();
         for (Integer friendId : user.getFriends()) {
-            friends.add(userService.getUser(friendId.toString()));
+            friends.add(userService.getUser(friendId));
         }
         return friends;
     }
 
     @GetMapping("/{id}")
-    public User findUser(@PathVariable String id) {
+    public User findUser(@PathVariable Integer id) {
         log.info("Получен запрос GET к эндопоинту: /users/{}/", id);
         return userService.getUser(id);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public Collection<User> findCommonFriends(@PathVariable String id, @PathVariable String otherId) {
+    public Collection<User> findCommonFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
         log.info("Получен запрос GET к эндопоинту: /users/{}/friends/common/{}", id, otherId);
         return userService.getCommonFriends(id, otherId);
     }
 
     @PostMapping
-    public User create(@RequestBody User user) {
+    public User create(@Valid @RequestBody User user) {
         log.info("Получен запрос POST. Данные тела запроса: {}", user);
         final User validUser = userService.add(user);
         log.info("Создан объект {} с идентификатором {}", User.class.getSimpleName(), validUser.getId());
@@ -57,7 +58,7 @@ public class UserController {
     }
 
     @PutMapping
-    public User put(@RequestBody User user) {
+    public User put(@Valid @RequestBody User user) {
         log.info("Получен запрос PUT. Данные тела запроса: {}", user);
         final User validUser = userService.update(user);
         log.info("Обновлен объект {} с идентификатором {}", User.class.getSimpleName(), validUser.getId());
@@ -65,7 +66,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable String id, @PathVariable String friendId) {
+    public void addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
         log.info("Получен запрос PUT к эндопоинту: /users/{}/friends/{}", id, friendId);
         userService.addFriend(id, friendId);
         log.info("Обновлен объект {} с идентификатором {}. Добавлен друг {}",
@@ -73,7 +74,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    public void deleteFriend(@PathVariable String id, @PathVariable String friendId) {
+    public void deleteFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
         log.info("Получен запрос DELETE к эндопоинту: /users/{}/friends/{}", id, friendId);
         userService.deleteFriend(id, friendId);
         log.info("Обновлен объект {} с идентификатором {}. Удален друг {}",

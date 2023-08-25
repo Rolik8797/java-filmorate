@@ -29,7 +29,7 @@ public class GenreController {
     }
 
     @GetMapping("/{id}")
-    public Genre findGenre(@PathVariable String id) {
+    public Genre findGenre(@PathVariable Integer id) {
         log.info("Получен запрос GET к эндопоинту: /genres/{}", id);
         return genreService.getGenre(id);
     }

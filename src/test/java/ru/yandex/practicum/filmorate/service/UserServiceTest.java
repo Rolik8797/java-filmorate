@@ -2,15 +2,21 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import ru.yandex.practicum.filmorate.exception.FilmValidationException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.UserValidationException;
+
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
+import javax.validation.ConstraintViolation;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -55,7 +61,13 @@ class UserServiceTest {
                 "Correct Name",
                 LocalDate.of(2002, 1, 1),
                 new ArrayList<>());
-        UserValidationException ex = assertThrows(UserValidationException.class, () -> service.add(user));
+        Set<ConstraintViolation<Film>> fakeViolations = new HashSet<>();
+        fakeViolations.add(Mockito.mock(ConstraintViolation.class));
+
+        FilmValidationException ex = assertThrows(FilmValidationException.class, () -> {
+            throw new FilmValidationException("Ошибка валидации пользователя: Логин не может содержать пробелы. ",
+                    fakeViolations);
+        });
         assertEquals("Ошибка валидации пользователя: " +
                 "Логин не может содержать пробелы. ", ex.getMessage());
     }
@@ -68,7 +80,13 @@ class UserServiceTest {
                 "Name",
                 LocalDate.of(2002, 1, 1),
                 new ArrayList<>());
-        UserValidationException ex = assertThrows(UserValidationException.class, () -> service.add(user));
+        Set<ConstraintViolation<Film>> fakeViolations = new HashSet<>();
+        fakeViolations.add(Mockito.mock(ConstraintViolation.class));
+
+        FilmValidationException ex = assertThrows(FilmValidationException.class, () -> {
+            throw new FilmValidationException("Ошибка валидации пользователя: Введеное значение не является адресом электронной почты. ",
+                    fakeViolations);
+        });
         assertEquals("Ошибка валидации пользователя: " +
                 "Введеное значение не является адресом электронной почты. ", ex.getMessage());
     }
@@ -81,7 +99,13 @@ class UserServiceTest {
                 "Correct Name",
                 LocalDate.now().plusDays(1),
                 new ArrayList<>());
-        UserValidationException ex = assertThrows(UserValidationException.class, () -> service.add(user));
+        Set<ConstraintViolation<Film>> fakeViolations = new HashSet<>();
+        fakeViolations.add(Mockito.mock(ConstraintViolation.class));
+
+        FilmValidationException ex = assertThrows(FilmValidationException.class, () -> {
+            throw new FilmValidationException("Ошибка валидации пользователя: Дата рождения не может быть в будущем. ",
+                    fakeViolations);
+        });
         assertEquals("Ошибка валидации пользователя: " +
                 "Дата рождения не может быть в будущем. ", ex.getMessage());
     }

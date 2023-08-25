@@ -41,13 +41,13 @@ public class FilmService {
         return filmStorage.updateFilm(film);
     }
 
-    public void addLike(final String id, final String userId) {
+    public void addLike(final Integer id, final Integer userId) {
         Film film = getStoredFilm(id);
         User user = userService.getUser(userId);
         filmStorage.addLike(film.getId(), user.getId());
     }
 
-    public void deleteLike(final String id, final String userId) {
+    public void deleteLike(final Integer id, final Integer userId) {
         Film film = getStoredFilm(id);
         User user = userService.getUser(userId);
         filmStorage.deleteLike(film.getId(), user.getId());
@@ -58,7 +58,7 @@ public class FilmService {
         return filmStorage.getMostPopularFilms(size);
     }
 
-    public Film getFilm(String id) {
+    public Film getFilm(Integer id) {
         return getStoredFilm(id);
     }
 
@@ -75,7 +75,7 @@ public class FilmService {
         return film;
     }
 
-    private Film getStoredFilm(final String supposedId) {
+    private Film getStoredFilm(final Integer supposedId) {
         int filmId = intFromString(supposedId);
         if (filmId == Integer.MIN_VALUE) {
             throw new WrongIdException("Не удалось распознать идентификатор фильма: " + "значение " + supposedId);
@@ -89,7 +89,7 @@ public class FilmService {
         return film;
     }
 
-    private Integer intFromString(final String supposedInt) {
+    private Integer intFromString(final Integer supposedInt) {
         try {
             return Integer.valueOf(supposedInt);
         } catch (NumberFormatException exception) {

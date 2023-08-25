@@ -18,12 +18,12 @@ public class MpaService {
         return mpaStorage.getAllMpa();
     }
 
-    public Mpa getMpa(String supposedId) {
+    public Mpa getMpa(Integer supposedId) {
         int id = intFromString(supposedId);
         return mpaStorage.getMpaById(id);
     }
 
-    private Integer intFromString(final String supposedInt) {
+    private Integer intFromString(final Integer supposedInt) {
         try {
             return Integer.valueOf(supposedInt);
         } catch (NumberFormatException exception) {
