@@ -1,21 +1,21 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.dto;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import ru.yandex.practicum.filmorate.annotations.ReleaseDateValidation;
-
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class Film {
-
+@Getter
+@Setter
+public class FilmDto {
     private int id;
     @NotBlank(message = "Имя должно содержать буквенные символы. ")
     private String name;
@@ -51,13 +51,5 @@ public class Film {
     @Override
     public int hashCode() {
         return Objects.hash(getId());
-    }
-
-    public void setGenres(List<Genre> genres) {
-        this.genres = genres;
-    }
-
-    public void setMpa(Mpa mpa) {
-        this.mpa = mpa;
     }
 }
